@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'src/providers/task_provider.dart';
+import 'src/screens/home_with_map.dart';
+import 'src/screens/add_task.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,13 +13,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'GeoRemind',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
-        useMaterial3: true,
+    return ChangeNotifierProvider(
+      create: (_) => TaskProvider(),
+      child: MaterialApp(
+        title: 'GeoRemind',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
+          useMaterial3: true,
+        ),
+        initialRoute: '/',
+        routes: {
+          '/': (c) => const LoginScreen(),
+          '/home': (c) => const HomeWithMap(),
+          '/add': (c) => const AddTaskScreen(),
+        },
       ),
-      home: const LoginScreen(),
     );
   }
 }
@@ -44,10 +56,8 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(height: 32),
               ElevatedButton.icon(
                 onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (_) => const HomeScreen()),
-                  );
+                  // TODO: hook up Google sign-in
+                  Navigator.pushReplacementNamed(context, '/home');
                 },
                 icon: const Icon(Icons.login),
                 label: const Text("Continue with Google"),
@@ -68,68 +78,6 @@ class LoginScreen extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("GeoRemind")),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          const Text(
-            "Nearby Tasks",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 12),
-          TaskCard(
-            title: "Pick up package",
-            location: "Georgia Tech Post Office",
-            isNearby: true,
-          ),
-          TaskCard(
-            title: "Study group",
-            location: "CULC",
-            isNearby: false,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class TaskCard extends StatelessWidget {
-  final String title;
-  final String location;
-  final bool isNearby;
-
-  const TaskCard({
-    super.key,
-    required this.title,
-    required this.location,
-    required this.isNearby,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 2,
-      child: ListTile(
-        leading: Icon(
-          isNearby ? Icons.notifications_active : Icons.location_on_outlined,
-          color: isNearby ? Colors.green : Colors.grey,
-        ),
-        title: Text(title),
-        subtitle: Text(location),
-        trailing: const Icon(Icons.chevron_right),
       ),
     );
   }
