@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'src/providers/task_provider.dart';
-import 'src/screens/home_with_map.dart';
-import 'src/screens/add_task.dart';
+import 'package:geocalendar_gt/task_provider.dart';
+import 'package:geocalendar_gt/home_with_map.dart';
+import 'package:geocalendar_gt/add_task.dart';
+import 'package:geocalendar_gt/notification_service.dart';
+import 'package:geocalendar_gt/location.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize notifications
+  await NotificationService().init();
+
+  // Start location listener (it will check permissions itself)
+  LocationService().startLocationListener();
+
   runApp(const MyApp());
 }
 
@@ -18,8 +28,29 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'GeoRemind',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
+          brightness: Brightness.dark,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.deepPurpleAccent,
+            brightness: Brightness.dark,
+          ),
           useMaterial3: true,
+          scaffoldBackgroundColor: const Color(0xFF0B0E14),
+          inputDecorationTheme: const InputDecorationTheme(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+            filled: true,
+            fillColor: Color(0xFF0F1720),
+          ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              elevation: 2,
+              textStyle: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+          ),
         ),
         initialRoute: '/',
         routes: {
@@ -48,10 +79,7 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(height: 16),
               const Text(
                 "Welcome to GeoRemind",
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 32),
               ElevatedButton.icon(

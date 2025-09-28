@@ -3,6 +3,10 @@
         android:label="geocalendar_gt"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <!-- Google Maps API Key -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDzZZoHVOGUHHag6zDqWQGx_Pomcy3mhc0" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -31,6 +35,10 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
+    <!-- Location permission for Android -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and
          https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
